@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Growtopia - Dashboard</title>
+  <title>GTPS Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body class="flex items-center justify-center min-h-screen bg-transparent">
 
   <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
-    <div class="relative flex flex-col md:flex-row bg-[#a67c00]/90 border-4 border-[#ffcc80] shadow-2xl p-8 w-[90%] max-w-[750px] rounded-xl backdrop-blur-md items-center justify-between animate-slideUp">
+    <div class="relative flex flex-col md:flex-row bg-[#a67c00]/90 border-4 border-[#ffcc80] shadow-2xl p-8 w-[90%] max-w-[750px] rounded-xl backdrop-blur-md animate-slideUp">
       
-      <!-- Left Side -->
+      <!-- Left Info -->
       <div class="flex flex-col items-start justify-center w-full md:w-1/2 mb-6 md:mb-0 pr-0 md:pr-4">
         <p class="text-white font-extrabold text-4xl mb-4 drop-shadow-lg leading-tight animate-bounce-slow">
           Log into your<br><span class="text-[#ffd54f]">GTPS ID</span>
@@ -26,16 +26,13 @@
         </div>
       </div>
 
-      <!-- Right Side: Form -->
+      <!-- Right Form -->
       <div class="w-full md:w-1/2">
         <div id="errorDiv" class="hidden mb-2 text-xs text-red-700 font-bold px-[5px] bg-[#a67c00]/80 rounded">
           <a id="errorMessage"></a>
         </div>
 
-        <form method="post" action="/player/growid/login/validate" accept-charset="UTF-8" id="loginForm">
-          <input name="type" value="log" type="hidden" />
-          <!-- <input name="_token" value="your_token_here" type="hidden" /> -->
-
+        <form id="loginForm">
           <div class="mb-3">
             <label for="loginGrowId" class="block text-white text-xs mb-1">GrowID</label>
             <div class="flex items-center border-2 border-[#ffd54f] rounded bg-[#a67c00]/70 px-2 py-2">
@@ -71,17 +68,13 @@
       0% { transform: translateY(30px); opacity: 0; }
       100% { transform: translateY(0); opacity: 1; }
     }
-    .animate-slideUp {
-      animation: slideUp 1s ease-out forwards;
-    }
+    .animate-slideUp { animation: slideUp 1s ease-out forwards; }
 
     @keyframes bounceSlow {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-8px); }
     }
-    .animate-bounce-slow {
-      animation: bounceSlow 3s infinite;
-    }
+    .animate-bounce-slow { animation: bounceSlow 3s infinite; }
   </style>
 
   <!-- Script -->
@@ -92,32 +85,56 @@
       const passwordInput = document.getElementById('loginPassword');
       const errorDiv = document.getElementById('errorDiv');
       const errorMessage = document.getElementById('errorMessage');
+      const togglePasswordBtn = document.getElementById('toggleLogPassword');
 
-      // Prefill GrowID if stored
+      // Prefill GrowID
       if (localStorage.getItem('growId')) {
         growIdInput.value = localStorage.getItem('growId');
       }
 
       // Show/hide password
-      document.getElementById('toggleLogPassword').addEventListener('click', function () {
+      togglePasswordBtn.addEventListener('click', function () {
         const isPassword = passwordInput.getAttribute('type') === 'password';
         passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
         this.innerHTML = isPassword ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
       });
 
-      // Validate on submit
-      loginForm.addEventListener('submit', function (event) {
+      // Handle form submit
+      loginForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
         const growId = growIdInput.value.trim();
         const password = passwordInput.value.trim();
 
         if (!growId || !password) {
-          event.preventDefault();
           showError('Username or Password is empty');
-        } else if (growId.length < 4 || password.length < 4) {
-          event.preventDefault();
+          return;
+        }
+
+        if (growId.length < 4 || password.length < 4) {
           showError('Username or Password must be at least 4 characters long');
-        } else {
-          localStorage.setItem('growId', growId);
+          return;
+        }
+
+        try {
+          const res = await fetch('http://localhost:3000/player/growid/login/validate', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ growId, password })
+          });
+
+          const data = await res.json();
+
+          if (!data.success) {
+            showError(data.message || 'Login failed.');
+          } else {
+            localStorage.setItem('growId', growId);
+            window.location.href = '/dashboard'; // Ganti sesuai halaman dashboard kamu
+          }
+        } catch (err) {
+          showError('Server tidak merespons.');
         }
       });
 
@@ -129,4 +146,3 @@
   </script>
 </body>
 </html>
-
