@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GTPS Login</title>
+  <title>Growtopia - Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body class="flex items-center justify-center min-h-screen bg-transparent">
 
   <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
-    <div class="relative flex flex-col md:flex-row bg-[#a67c00]/90 border-4 border-[#ffcc80] shadow-2xl p-8 w-[90%] max-w-[750px] rounded-xl backdrop-blur-md animate-slideUp">
+    <div class="relative flex flex-col md:flex-row bg-[#a67c00]/90 border-4 border-[#ffcc80] shadow-2xl p-8 w-[90%] max-w-[750px] rounded-xl backdrop-blur-md items-center justify-between animate-slideUp">
       
-      <!-- Left Info -->
+      <!-- Left Side -->
       <div class="flex flex-col items-start justify-center w-full md:w-1/2 mb-6 md:mb-0 pr-0 md:pr-4">
         <p class="text-white font-extrabold text-4xl mb-4 drop-shadow-lg leading-tight animate-bounce-slow">
           Log into your<br><span class="text-[#ffd54f]">GTPS ID</span>
@@ -26,13 +26,13 @@
         </div>
       </div>
 
-      <!-- Right Form -->
+      <!-- Right Side: Form -->
       <div class="w-full md:w-1/2">
         <div id="errorDiv" class="hidden mb-2 text-xs text-red-700 font-bold px-[5px] bg-[#a67c00]/80 rounded">
           <a id="errorMessage"></a>
         </div>
 
-        <form id="loginForm">
+        <form method="post" action="#" id="loginForm">
           <div class="mb-3">
             <label for="loginGrowId" class="block text-white text-xs mb-1">GrowID</label>
             <div class="flex items-center border-2 border-[#ffd54f] rounded bg-[#a67c00]/70 px-2 py-2">
@@ -54,7 +54,7 @@
 
           <div class="flex justify-end mt-4">
             <button type="submit" class="px-5 py-2 rounded bg-gradient-to-r from-yellow-400 to-yellow-600 text-white text-xs hover:from-yellow-500 hover:to-yellow-700 transition duration-300 ease-in-out transform hover:scale-105 font-bold shadow-md">
-              Start Farming
+              Start dek
             </button>
           </div>
         </form>
@@ -62,22 +62,6 @@
     </div>
   </div>
 
-  <!-- Animations -->
-  <style>
-    @keyframes slideUp {
-      0% { transform: translateY(30px); opacity: 0; }
-      100% { transform: translateY(0); opacity: 1; }
-    }
-    .animate-slideUp { animation: slideUp 1s ease-out forwards; }
-
-    @keyframes bounceSlow {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
-    .animate-bounce-slow { animation: bounceSlow 3s infinite; }
-  </style>
-
-  <!-- Script -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const loginForm = document.getElementById('loginForm');
