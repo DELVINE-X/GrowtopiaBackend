@@ -65,3 +65,9 @@ app.get('/', function (req, res) {
 app.listen(5000, function () {
     console.log('Listening on port 5000');
 });
+app.post('/player/growid/checktoken', (req,res)=>{
+    res.send(
+        `{"status":"success","message":"Account Validated.","token":"${req.body.refreshToken}","url":"","accountType":"growtopia"}`,
+    );
+})
+
